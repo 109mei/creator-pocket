@@ -16,7 +16,7 @@ function previous() {
 }
 test('parses official Atom metadata and canonicalizes Shorts without adding media requests', () => {
   const videos = parseFeed(xml(entry({ url: `https://www.youtube.com/shorts/${videoId}` })), channel);
-  assert.deepEqual(videos, [{ id: videoId, channelId: channel.id, channelTitle: channel.title, title: 'Science & space', publishedAt: earlier, updatedAt: earlier, url: `https://www.youtube.com/watch?v=${videoId}` }]);
+  assert.deepEqual(videos, [{ id: videoId, channelId: channel.id, channelTitle: channel.title, genres: ['space', 'science'], title: 'Science & space', publishedAt: earlier, updatedAt: earlier, url: `https://www.youtube.com/watch?v=${videoId}` }]);
 });
 test('rejects malformed XML, DTDs, entities, wrong namespace and wrong channel', () => {
   for (const body of [xml().replace('</entry>', ''), '<!DOCTYPE feed [<!ENTITY x SYSTEM "file:///etc/passwd">]>' + xml(), xml().replace('Science &amp; space', '&unrecognized;'), xml().replace('http://www.w3.org/2005/Atom', 'https://evil.example/'), xml().replace(channel.id.slice(2), 'somethingElse'), xml().replace(channel.url, 'https://evil.example/')]) assert.throws(() => parseFeed(body, channel));
@@ -66,7 +66,7 @@ test('total outage preserves update date; no-data failure is unavailable', async
   assert.equal(empty.updatedAt, null); assert.equal(empty.videos.length, 0);
   assert.equal(empty.channels[0].status, 'unavailable');
 });
-test('refresh is globally bounded to 30 newest videos and strips arbitrary data', async () => {
+test('refresh is bounded to 30 diverse videos ordered newest first', async () => {
   const result = await refreshFeed({ now, fetchImpl: async url => {
     const c = CHANNELS.find(x => x.feedUrl === url);
     return new Response(xml(Array.from({ length: 15 }, (_, i) => entry({ id: `${CHANNELS.indexOf(c)}${String(i).padStart(10,'0')}`, channelId: c.id, published: `2026-09-${String(i+1).padStart(2,'0')}T00:00:00Z` })).join(''), c));
@@ -100,4 +100,66 @@ test('corrupt newer deployed metadata cannot erase valid older bundled fallback'
   assert.equal(chosen.videos.length, 1);
   assert.equal(chosen.videos[0].title, 'Old title');
   assert.equal(chosen.channels[0].lastSuccessAt, earlier);
+});
+test('the fixed source pool uses eight verified channels with canonical genre tags', () => {
+  const expected = {
+    UCLA_DiR1FfKNvjuUpBHmylQ: ['space', 'science'],
+    UCfMIdADo6FQayQCOkLYGhrQ: ['space', 'science'],
+    UCMJiPpN_09F0aWpQrgbc_qg: ['gaming'],
+    UCkH3CcMfqww9RsZvPRPkAJA: ['gaming'],
+    'UC-veA4H0QF3Ev4uZe9vpQrQ': ['nature'],
+    'UCE40kwov-UdhGikwAowjAAQ': ['food'],
+    UCu1u0lXr88VIHpdwPn3JCNg: ['art'],
+    'UCZ3h7IyAMbrVgvmxTdj-rpA': ['music']
+  };
+  assert.deepEqual(Object.fromEntries(CHANNELS.map(c => [c.id, c.genres])), expected);
+  for (const c of CHANNELS) {
+    assert.equal(c.url, `https://www.youtube.com/channel/${c.id}`);
+    assert.equal(c.feedUrl, `https://www.youtube.com/feeds/videos.xml?channel_id=${c.id}`);
+  }
+});
+test('refresh preserves six genre groups even when the quieter sources are older', async () => {
+  const result = await refreshFeed({ now, fetchImpl: async url => {
+    const c = CHANNELS.find(x => x.feedUrl === url), index = CHANNELS.indexOf(c);
+    return new Response(xml(Array.from({ length: 15 }, (_, i) => entry({
+      id: `${index}${String(i).padStart(10, '0')}`, channelId: c.id,
+      published: `2026-${String(index < 2 ? 9 : 5).padStart(2, '0')}-${String(i + 1).padStart(2, '0')}T00:00:00Z`
+    })).join(''), c));
+  }, attempts: 1 });
+  assert.equal(result.videos.length, 30);
+  const counts = Object.fromEntries(['space', 'gaming', 'nature', 'food', 'art', 'music'].map(genre => [genre, result.videos.filter(v => v.genres?.[0] === genre).length]));
+  assert.deepEqual(counts, { space: 5, gaming: 5, nature: 5, food: 5, art: 5, music: 5 });
+  assert.ok(result.videos.every((v, i, list) => !i || list[i - 1].publishedAt >= v.publishedAt));
+  for (const genre of ['nature', 'food', 'art', 'music']) {
+    assert.deepEqual(result.videos.filter(v => v.genres[0] === genre).map(v => v.publishedAt.slice(8, 10)), ['15', '14', '13', '12', '11']);
+  }
+});
+test('legacy last-good snapshots regain canonical tags and cannot override the source catalog', () => {
+  const old = previous();
+  old.channels[0].genres = ['food', 'unknown'];
+  old.videos[0].genres = ['gaming'];
+  const restored = selectPrevious([old]);
+  assert.deepEqual(restored.channels[0].genres, ['space', 'science']);
+  assert.deepEqual(restored.videos[0].genres, ['space', 'science']);
+  assert.equal(restored.videos[0].title, 'Old title');
+  assert.equal(restored.channels[0].lastSuccessAt, earlier);
+});
+test('unused genre slots are filled without exceeding 30 and a total outage preserves the diverse snapshot', async () => {
+  const snapshot = await refreshFeed({ now: earlier, fetchImpl: async url => {
+    const c = CHANNELS.find(x => x.feedUrl === url), index = CHANNELS.indexOf(c);
+    const count = index === 0 ? 40 : [1, 3].includes(index) ? 0 : 1;
+    return new Response(xml(Array.from({ length: count }, (_, i) => entry({
+      id: `${index}${String(i).padStart(10, '0')}`, channelId: c.id
+    })).join(''), c));
+  }, attempts: 1 });
+  assert.equal(snapshot.videos.length, 30);
+  assert.equal(snapshot.videos.filter(v => v.genres[0] === 'space').length, 25);
+  for (const genre of ['gaming', 'nature', 'food', 'art', 'music']) assert.equal(snapshot.videos.filter(v => v.genres[0] === genre).length, 1);
+  const failed = await refreshFeed({ previous: snapshot, now, attempts: 1, fetchImpl: async () => new Response('outage', { status: 503 }) });
+  assert.deepEqual(failed.videos, snapshot.videos);
+  assert.equal(failed.updatedAt, earlier);
+  assert.equal(failed.checkedAt, now);
+  assert.ok(failed.channels.every(c => c.lastSuccessAt === earlier));
+  assert.equal(failed.channels[2].status, 'stale');
+  assert.equal(failed.channels[2].error, 'http_error');
 });

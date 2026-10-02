@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "day": 1,
+  "week": 1,
+  "phase": "result",
+  "followers": 365,
+  "coins": 182,
+  "energy": 53,
+  "trust": 71,
+  "gear": {
+    "camera": 0,
+    "lamp": 0,
+    "desk": 0
+  },
+  "posts": [
+    {
+      "id": "1-1",
+      "week": 1,
+      "day": 1,
+      "title": "朝のコーヒー",
+      "caption": "湯気が消えるまで、今日はゆっくり。",
+      "topic": "cozy",
+      "art": "coffee",
+      "tag": "暮らし",
+      "color": "#f2b89d",
+      "format": "short",
+      "edit": "captions",
+      "score": 68,
+      "followers": 125,
+      "coins": 62,
+      "energy": 27,
+      "trust": 1,
+      "reasons": [
+        "今日の気分にぴったり +28",
+        "形式も相性よし +8",
+        "仕上げの工夫 +12"
+      ],
+      "reach": 1500,
+      "likes": 225,
+      "comments": 9,
+      "fictional": true
+    }
+  ],
+  "recentTopics": [
+    "cozy"
+  ],
+  "lastResult": {
+    "type": "post",
+    "postId": "1-1"
+  },
+  "weekStart": {
+    "followers": 240,
+    "coins": 120,
+    "posts": 0
+  },
+  "totalPosts": 1
+}

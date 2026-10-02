@@ -52,7 +52,7 @@ The intended GitHub Actions schedule is approximately every six hours, at an off
   - video-level `updatedAt` comes from the publisher's Atom entry, not our fetch time
   - no descriptions, thumbnails, media files, visitor data, viewing history, or analytics
 
-Treat all metadata as untrusted text in the UI. Use `textContent` or the existing escaping function; never inject titles as HTML. Do not create an iframe, thumbnail, or other provider request until the visitor explicitly loads external content. Browser code should validate the payload again, deduplicate it against manual entries, and leave the user's local manual queue intact.
+Treat all metadata as untrusted text in the UI. Use `textContent` or the existing escaping function; never inject titles as HTML. YouTube is official link-out only, including manually added videos and immersive cards. Never create a YouTube iframe, thumbnail, Player API script, or other YouTube playback request, even if an old external-content consent flag is present. X alone retains its separate explicit embed consent. Browser code should validate the payload again, deduplicate it against manual entries, and leave the user's local manual queue intact.
 
 ## Failure handling and network boundary
 

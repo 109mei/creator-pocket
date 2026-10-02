@@ -1,10 +1,14 @@
 import { JSDOM } from 'jsdom';
 export const CHANNELS = Object.freeze([
-  { id: 'UCLA_DiR1FfKNvjuUpBHmylQ', title: 'NASA' },
-  { id: 'UCfMIdADo6FQayQCOkLYGhrQ', title: 'JAXA | 宇宙航空研究開発機構' },
-  { id: 'UCIBaDdAbGlFDeS33shmlD0A', title: 'European Space Agency, ESA' },
-  { id: 'UCryGec9PdUCLjpJW2mgCuLw', title: 'NASA Jet Propulsion Laboratory' }
-].map(channel => Object.freeze({ ...channel, url: `https://www.youtube.com/channel/${channel.id}`, feedUrl: `https://www.youtube.com/feeds/videos.xml?channel_id=${channel.id}` })));
+  { id: 'UCLA_DiR1FfKNvjuUpBHmylQ', title: 'NASA', genres: ['space', 'science'] },
+  { id: 'UCfMIdADo6FQayQCOkLYGhrQ', title: 'JAXA | 宇宙航空研究開発機構', genres: ['space', 'science'] },
+  { id: 'UCMJiPpN_09F0aWpQrgbc_qg', title: 'キヨ。', genres: ['gaming'] },
+  { id: 'UCkH3CcMfqww9RsZvPRPkAJA', title: 'Nintendo 公式チャンネル', genres: ['gaming'] },
+  { id: 'UC-veA4H0QF3Ev4uZe9vpQrQ', title: '大阪・海遊館 Osaka Aquarium Kaiyukan', genres: ['nature'] },
+  { id: 'UCE40kwov-UdhGikwAowjAAQ', title: 'Kurashiru [クラシル]', genres: ['food'] },
+  { id: 'UCu1u0lXr88VIHpdwPn3JCNg', title: '創作折り紙 カミキィkamikey origami', genres: ['art'] },
+  { id: 'UCZ3h7IyAMbrVgvmxTdj-rpA', title: 'よみぃ', genres: ['music'] }
+].map(channel => Object.freeze({ ...channel, genres: Object.freeze(channel.genres), url: `https://www.youtube.com/channel/${channel.id}`, feedUrl: `https://www.youtube.com/feeds/videos.xml?channel_id=${channel.id}` })));
 export const DEPLOYED_FEED_URL = 'https://109mei.github.io/creator-pocket/data/youtube-videos.json';
 export const MAX_BYTES = 524288;
 const MAX_VIDEOS = 30;
@@ -47,11 +51,32 @@ function normalizeVideo(input, channel) {
   if (input.url !== url && input.url !== `https://www.youtube.com/shorts/${id}`) throw fail('invalid_feed');
   const publishedAt = date(input.publishedAt), updatedAt = date(input.updatedAt);
   if (!publishedAt || !updatedAt) throw fail('invalid_feed');
-  return { id, channelId: channel.id, channelTitle: channel.title, title: safeText(input.title), publishedAt, updatedAt, url };
+  return { id, channelId: channel.id, channelTitle: channel.title, genres: [...channel.genres], title: safeText(input.title), publishedAt, updatedAt, url };
 }
 function bounded(videos) {
-  const unique = [...new Map(videos.map(video => [video.id, video])).values()];
-  return unique.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id)).slice(0, MAX_VIDEOS);
+  const newestFirst = (a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id);
+  const unique = [...new Map(videos.map(video => [video.id, video])).values()].sort(newestFirst);
+  // Allocate equally across content groups, then fill unused capacity. Multiple
+  // tags (space/science) belong to one bucket, not multiple quota slots. Keep
+  // newest-first ordering inside each group and in the final selected snapshot.
+  const groups = new Map();
+  for (const video of unique) {
+    const genre = CHANNELS.find(channel => channel.id === video.channelId)?.genres[0];
+    if (!groups.has(genre)) groups.set(genre, []);
+    groups.get(genre).push(video);
+  }
+  const selected = [];
+  for (let round = 0; selected.length < MAX_VIDEOS; round++) {
+    let added = false;
+    for (const group of groups.values()) {
+      if (group[round] && selected.length < MAX_VIDEOS) {
+        selected.push(group[round]);
+        added = true;
+      }
+    }
+    if (!added) break;
+  }
+  return selected.sort(newestFirst);
 }
 /** Atom is untrusted input. No resource loading or script execution is enabled. */
 export function parseFeed(xml, channel) {
