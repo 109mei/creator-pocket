@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {escapeHtml,renderApp,renderComposer,renderResult}from'../src/render.js';import{initialState,getIdeas,publish}from'../src/game.js';
+const s=initialState(),d={ideaId:getIdeas(s)[0].id,format:'short',edit:'captions'};
+test('renderer escapes markup from saved text',()=>{assert.equal(escapeHtml('<script>"&'), '&lt;script&gt;&quot;&amp;');});
+test('studio exposes fictional labels and primary creation action',()=>{const html=renderApp(s,{tab:'studio',queue:[],mediaIndex:0});assert.match(html,/ゲーム内/);assert.match(html,/data-action="compose"/);assert.match(html,/マイフィード/);});
+test('composer exposes all choices, costs, and explicit game-only publication',()=>{const html=renderComposer(s,d);assert.match(html,/ゲーム内に投稿/);assert.match(html,/字幕で工夫/);assert.match(html,/制作時間/);assert.match(html,/元気/);assert.match(html,/data-action="publish"/);});
+test('real media page has consent notice, source link and no game rewards',()=>{const html=renderApp(s,{tab:'media',queue:['https://www.youtube.com/watch?v=I7v_xuCDwnM'],mediaIndex:0});assert.match(html,/外部サービス/);assert.match(html,/報酬はありません/);assert.match(html,/youtube.com\/watch/);assert.match(html,/data-action="load-media"/);assert.doesNotMatch(html,/<iframe/);assert.doesNotMatch(html,/<img/);});
+test('result explains rewards and routes one guarded continue action',()=>{const html=renderResult(publish(s,d));assert.match(html,/今日の作品/);assert.match(html,/data-action="continue"/);assert.match(html,/ゲーム内/);});
+test('real media load point states transmitted data before details',()=>{const html=renderApp(s,{tab:'media',queue:['https://www.youtube.com/watch?v=I7v_xuCDwnM'],mediaIndex:0});assert.ok(html.indexOf('IPアドレス')<html.indexOf('<details'));});
+test('informational controls meet minimum touch target rules',async()=>{const {readFile}=await import('node:fs/promises');const css=await readFile(new URL('../src/styles.css',import.meta.url),'utf8');assert.match(css,/\.info-button[^}]*min-width:44px/);assert.match(css,/\.hero-actions \.quiet[^}]*min-height:44px/);});
