@@ -1,11 +1,11 @@
 {
   "name": "creator-pocket",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules --test",
-    "check": "node --check src/app.js && node --check src/render.js && node --check src/game.js && node --check src/media.js",
+    "check": "node --check src/app.js && node --check src/render.js && node --check src/game.js && node --check src/media.js && node --check src/feed.js",
     "build": "node scripts/build.mjs",
     "dev": "node scripts/serve.mjs"
   },

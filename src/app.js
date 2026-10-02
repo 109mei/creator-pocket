@@ -1,26 +1,27 @@
 import{initialState,getIdeas,preview,publish,rest,continueDay,upgrade,startWeek,restoreState}from'./game.js';
+import{swipeDirection,nextFeedIndex}from'./feed.js';
 import{SEED_MEDIA,parseMediaUrl,restoreQueue,youtubeEmbedUrl}from'./media.js';
 import{renderApp,renderComposer,renderResult,renderSummary,renderPrivacy,icon}from'./render.js';
 const SAVE='creator-pocket-v1',QUEUE='creator-pocket-queue-v1';
 let storageOK=true,initialSave=null,initialQueue=null;
 try{initialSave=localStorage.getItem(SAVE);initialQueue=localStorage.getItem(QUEUE);}catch{storageOK=false;}
 let state=restoreState(initialSave)||initialState();
-let view={tab:'studio',queue:initialQueue===null?SEED_MEDIA.map(x=>x.url):restoreQueue(initialQueue),mediaIndex:0};
-let draft=null,modal='',opener=null,toastTimer=null,mediaTimer=null,activeFrame=null,player=null,mediaGeneration=0;
+let view={tab:'studio',queue:initialQueue===null?SEED_MEDIA.map(x=>x.url):restoreQueue(initialQueue),mediaIndex:0,immersive:false,mediaConsent:false};
+let draft=null,modal='',opener=null,toastTimer=null,mediaTimer=null,activeFrame=null,player=null,mediaGeneration=0,priorScroll=0,swipeStart=null;
 const app=document.querySelector('#app'),dialog=document.querySelector('#dialog');
-function toast(text){const box=document.querySelector('#toast');box.textContent=text;box.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>box.classList.remove('visible'),3800);}
+function toast(text){if(view.immersive){setStatus(text);return;}const box=document.querySelector('#toast');box.textContent=text;box.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>box.classList.remove('visible'),3800);}
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(state));localStorage.setItem(QUEUE,JSON.stringify(view.queue));}catch{if(storageOK)toast('保存できないため、この画面を閉じるまでのプレイになります。');storageOK=false;}}
 function closeMedia(){mediaGeneration++;clearTimeout(mediaTimer);if(player){try{player.destroy();}catch{}player=null;}if(activeFrame){activeFrame.remove();activeFrame=null;}}
-function render(focus=false){closeMedia();app.innerHTML=renderApp(state,view);if(focus)document.querySelector('#main-content')?.focus();}
+function render(focus=false){closeMedia();if(view.immersive){document.querySelector('#toast').classList.remove('visible');clearTimeout(toastTimer);}document.body.classList.toggle('immersive-active',view.immersive);app.innerHTML=renderApp(state,view);if(focus)document.querySelector('#main-content')?.focus({preventScroll:view.immersive});if(view.immersive&&view.mediaConsent&&!dialog.open&&view.queue.length)void loadMedia();}
 function closeDialog(){if(dialog.open)dialog.close();modal='';draft=null;if(opener?.isConnected)opener.focus();else document.querySelector('#main-content')?.focus();}
-function showDialog(kind,content){if(view.tab==='media')render(true);if(!dialog.open)opener=document.activeElement;modal=kind;dialog.innerHTML=content;if(!dialog.open)dialog.showModal();const focus=dialog.querySelector('[autofocus],button,input');focus?.focus();}
+function showDialog(kind,content){if(view.tab==='media'){view.mediaConsent=false;render(true);}if(!dialog.open)opener=document.activeElement;modal=kind;dialog.innerHTML=content;if(!dialog.open)dialog.showModal();const focus=dialog.querySelector('[autofocus],button,input');focus?.focus();}
 function draftRender(focusAction,focusId){dialog.innerHTML=renderComposer(state,draft);if(focusAction)dialog.querySelector(`[data-action="${focusAction}"][data-id="${focusId}"]`)?.focus();}
 function showResult(){showDialog('result',renderResult(state));}
 function showSummary(){showDialog('summary',renderSummary(state));}
 function setStatus(message){const node=document.querySelector('#embed-status');if(node)node.textContent=message;}
 async function youtubeAPI(){if(window.YT?.Player)return window.YT;return new Promise((resolve,reject)=>{const prior=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{prior?.();resolve(window.YT);};const existing=document.querySelector('script[data-youtube-api]');if(!existing){const script=document.createElement('script');script.dataset.youtubeApi='true';script.src='https://www.youtube.com/iframe_api';script.onerror=()=>{script.remove();reject(new Error('script'));};document.head.append(script);}setTimeout(()=>window.YT?.Player?resolve(window.YT):reject(new Error('timeout')),12000);});}
 async function loadMedia(){
- const media=parseMediaUrl(view.queue[view.mediaIndex]);if(!media)return;closeMedia();const generation=mediaGeneration;
+ const media=parseMediaUrl(view.queue[view.mediaIndex]);if(!media)return;if(view.immersive)view.mediaConsent=true;closeMedia();const generation=mediaGeneration;
  const mount=document.querySelector('#embed-mount');mount.innerHTML='<div class="player-loading">公式プレーヤーに接続中…</div>';setStatus('外部サービスに接続中。再生できない場合は下の元リンクをご利用ください。');document.querySelector('#unload-button')?.classList.remove('hidden');
  mediaTimer=setTimeout(()=>{if(generation===mediaGeneration)setStatus('読み込みに時間がかかっています。元のサービスで開くか、閉じてもう一度お試しください。');},15000);
  if(media.platform==='youtube'){
@@ -33,7 +34,10 @@ async function loadMedia(){
 window.addEventListener('message',event=>{if(!activeFrame||event.source!==activeFrame.contentWindow||event.data?.source!=='creator-pocket-x')return;if(event.data.type==='ready'){clearTimeout(mediaTimer);setStatus('X公式投稿です。実際の視聴はゲームの数字に影響しません。');}else if(event.data.type==='error'){clearTimeout(mediaTimer);setStatus('X投稿を表示できません。削除・公開範囲・接続制限をご確認のうえ、元のXリンクで開いてください。');}else if(event.data.type==='height'&&Number.isFinite(event.data.height)){activeFrame.style.height=`${Math.min(1200,Math.max(320,event.data.height))}px`;}});
 document.addEventListener('click',async event=>{const el=event.target.closest('[data-action]');if(!el)return;event.preventDefault();const action=el.dataset.action;if(el.disabled)return;
  try{
- if(action==='tab'){closeDialog();view.tab=el.dataset.tab;render(true);window.scrollTo({top:0});return;}
+ if(action==='tab'){view.immersive=false;view.mediaConsent=false;closeDialog();view.tab=el.dataset.tab;render(true);window.scrollTo({top:0});return;}
+ if(action==='enter-immersive'){if(!view.queue.length)return;priorScroll=window.scrollY;view.immersive=true;view.mediaConsent=false;render(true);window.scrollTo({top:0});return;}
+ if(action==='exit-immersive'){view.immersive=false;view.mediaConsent=false;swipeStart=null;render();window.scrollTo({top:priorScroll});document.querySelector('[data-action=enter-immersive]')?.focus({preventScroll:true});return;}
+ if(action==='add-immersive'){view.mediaConsent=false;showDialog('add-media',`<div class="dialog-heading"><h2 id="dialog-title">動画をキューに追加</h2><button class="icon-button" data-action="close" aria-label="閉じる">${icon('close')}</button></div><form id="url-form"><label for="video-url">公開されているYouTube / X投稿のURL</label><div class="url-row"><input id="video-url" name="url" type="url" required maxlength="2048" autocomplete="off" placeholder="https://youtube.com/shorts/…"><button class="secondary" type="submit">追加</button></div><p class="field-hint">追加後も、有効にするまで外部接続しません。</p></form>`);return;}
  if(action==='compose'){if(state.phase!=='planning')return;draft={ideaId:getIdeas(state)[0].id,format:'short',edit:'captions'};showDialog('compose',renderComposer(state,draft));return;}
  if(action.startsWith('choose-')&&modal==='compose'){const key={'choose-idea':'ideaId','choose-format':'format','choose-edit':'edit'}[action];if(key){draft[key]=el.dataset.id;draftRender(action,el.dataset.id);}return;}
  if(action==='publish'){if(modal!=='compose'||state.phase!=='planning')return;state=publish(state,draft);save();render(true);showResult();return;}
@@ -46,13 +50,18 @@ document.addEventListener('click',async event=>{const el=event.target.closest('[
  if(action==='close'){closeDialog();return;}if(action==='privacy'){showDialog('privacy',renderPrivacy());return;}
  if(action==='reset'){showDialog('reset-confirm',`<div class="dialog-heading"><h2 id="dialog-title">ゲームをはじめから？</h2><button class="icon-button" data-action="close" aria-label="閉じる">${icon('close')}</button></div><p>このブラウザーのゲーム進行・作品・道具が初期状態に戻ります。動画キューは残ります。</p><button class="primary wide" data-action="confirm-reset">はじめから遊ぶ</button><button class="text-button wide" data-action="close">戻る</button>`);return;}
  if(action==='confirm-reset'){state=initialState();save();closeDialog();view.tab='studio';render(true);return;}
- if(action==='load-media'){await loadMedia();return;}if(action==='unload-media'){render(true);return;}
+ if(action==='load-media'){await loadMedia();return;}if(action==='unload-media'){view.mediaConsent=false;render(true);return;}
  if(['prev-media','next-media','select-media','remove-media'].includes(action)){if(action==='remove-media'){const i=Number(el.dataset.index);view.queue.splice(i,1);if(i<view.mediaIndex)view.mediaIndex--;view.mediaIndex=Math.min(view.mediaIndex,Math.max(0,view.queue.length-1));save();}else{view.mediaIndex=action==='prev-media'?Math.max(0,view.mediaIndex-1):action==='next-media'?Math.min(view.queue.length-1,view.mediaIndex+1):Number(el.dataset.index);}render(true);return;}
  }catch(error){toast(error.message||'もう一度試してください。');}
 });
-document.addEventListener('submit',event=>{if(event.target.id!=='url-form')return;event.preventDefault();const input=event.target.elements.url,media=parseMediaUrl(input.value);if(!media){toast('公開されているYouTube・X投稿の https:// URLを入れてください。');input.focus();return;}if(view.queue.some(url=>{const m=parseMediaUrl(url);return m.id===media.id&&m.platform===media.platform;})){toast('その動画は、もうキューにあります。');return;}if(view.queue.length>=30){toast('キューは30件まで。不要なリンクを外してください。');return;}view.queue.push(media.url);view.mediaIndex=view.queue.length-1;save();render(true);toast('マイキューに追加しました。');});
+document.addEventListener('submit',event=>{if(event.target.id!=='url-form')return;event.preventDefault();const input=event.target.elements.url,media=parseMediaUrl(input.value);if(!media){toast('公開されているYouTube・X投稿の https:// URLを入れてください。');input.focus();return;}if(view.queue.some(url=>{const m=parseMediaUrl(url);return m.id===media.id&&m.platform===media.platform;})){toast('その動画は、もうキューにあります。');return;}if(view.queue.length>=30){toast('キューは30件まで。不要なリンクを外してください。');return;}view.queue.push(media.url);view.mediaIndex=view.queue.length-1;save();if(modal==='add-media')closeDialog();render(true);toast('マイキューに追加しました。');});
 dialog.addEventListener('cancel',event=>{event.preventDefault();closeDialog();});
 dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeDialog();}});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){try{player?.pauseVideo();}catch{}if(activeFrame){closeMedia();if(view.tab==='media')render(true);}}});
+function moveFeed(direction){if(!view.immersive||dialog.open)return;const next=nextFeedIndex(view.mediaIndex,direction,view.queue.length);if(next===view.mediaIndex){toast(direction>0?'キューの最後です。URLから動画を追加できます。':'キューの最初です。');return;}view.mediaIndex=next;render(true);}
+document.addEventListener('pointerdown',event=>{if(!view.immersive||dialog.open)return;if(event.isPrimary===false){swipeStart=null;return;}if(event.button!==undefined&&event.button!==0)return;const area=event.target.closest?.('[data-swipe-area]');if(!area||event.target.closest?.('button,a,input,textarea,select'))return;swipeStart={x:event.clientX,y:event.clientY,id:event.pointerId};try{area.setPointerCapture?.(event.pointerId);}catch{}});
+document.addEventListener('pointerup',event=>{if(!swipeStart||event.pointerId!==swipeStart.id)return;const start=swipeStart;swipeStart=null;const direction=swipeDirection(start,{x:event.clientX,y:event.clientY});if(direction)moveFeed(direction);});
+for(const type of ['pointercancel','lostpointercapture'])document.addEventListener(type,()=>{swipeStart=null;});
+document.addEventListener('keydown',event=>{if(!view.immersive||dialog.open||event.target.closest?.('input,textarea,select,[contenteditable=true]'))return;if(event.key==='ArrowUp'||event.key==='ArrowDown'){event.preventDefault();moveFeed(event.key==='ArrowUp'?1:-1);}else if(event.key==='Escape'){document.querySelector('[data-action=exit-immersive]')?.click();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){try{player?.pauseVideo();}catch{}if(activeFrame){closeMedia();if(view.tab==='media'){view.mediaConsent=false;render(true);}}}});
 window.addEventListener('pagehide',()=>{closeMedia();save();});
 render(true);if(!storageOK)setTimeout(()=>toast('保存は利用できません。この画面を閉じるまで遊べます。'),500);else if(initialSave&&!restoreState(initialSave))setTimeout(()=>toast('保存データを読み込めなかったため、新しく始めました。'),500);
