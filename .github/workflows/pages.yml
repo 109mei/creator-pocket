@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '23 */6 * * *'
 permissions:
   contents: read
   pages: write
@@ -18,8 +20,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
       - run: npm ci --ignore-scripts
+      - run: npm run update:videos
       - run: npm test
       - run: npm run check
       - run: npm run build
@@ -27,6 +29,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+          retention-days: 1
   deploy:
     needs: build
     runs-on: ubuntu-latest

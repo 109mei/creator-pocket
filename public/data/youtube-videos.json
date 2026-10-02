@@ -1,0 +1,315 @@
+{
+  "version": 1,
+  "checkedAt": "2026-10-02T13:51:36.080Z",
+  "updatedAt": "2026-10-02T13:51:36.080Z",
+  "channels": [
+    {
+      "id": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "title": "NASA",
+      "url": "https://www.youtube.com/channel/UCLA_DiR1FfKNvjuUpBHmylQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCLA_DiR1FfKNvjuUpBHmylQ",
+      "status": "ok",
+      "lastSuccessAt": "2026-10-02T13:51:36.080Z",
+      "error": null
+    },
+    {
+      "id": "UCfMIdADo6FQayQCOkLYGhrQ",
+      "title": "JAXA | 宇宙航空研究開発機構",
+      "url": "https://www.youtube.com/channel/UCfMIdADo6FQayQCOkLYGhrQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCfMIdADo6FQayQCOkLYGhrQ",
+      "status": "ok",
+      "lastSuccessAt": "2026-10-02T13:51:36.080Z",
+      "error": null
+    },
+    {
+      "id": "UCIBaDdAbGlFDeS33shmlD0A",
+      "title": "European Space Agency, ESA",
+      "url": "https://www.youtube.com/channel/UCIBaDdAbGlFDeS33shmlD0A",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCIBaDdAbGlFDeS33shmlD0A",
+      "status": "ok",
+      "lastSuccessAt": "2026-10-02T13:51:36.080Z",
+      "error": null
+    },
+    {
+      "id": "UCryGec9PdUCLjpJW2mgCuLw",
+      "title": "NASA Jet Propulsion Laboratory",
+      "url": "https://www.youtube.com/channel/UCryGec9PdUCLjpJW2mgCuLw",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCryGec9PdUCLjpJW2mgCuLw",
+      "status": "ok",
+      "lastSuccessAt": "2026-10-02T13:51:36.080Z",
+      "error": null
+    }
+  ],
+  "videos": [
+    {
+      "id": "FSSKss9aKnU",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "Beyond the airlock: Sophie Adenot's three spacewalks",
+      "publishedAt": "2026-10-02T13:39:25.000Z",
+      "updatedAt": "2026-10-02T13:44:19.000Z",
+      "url": "https://www.youtube.com/watch?v=FSSKss9aKnU"
+    },
+    {
+      "id": "zmW8hgV39IU",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "Juice's Earth flyby in stunning images | September 2026",
+      "publishedAt": "2026-10-02T08:26:22.000Z",
+      "updatedAt": "2026-10-02T12:34:38.000Z",
+      "url": "https://www.youtube.com/watch?v=zmW8hgV39IU"
+    },
+    {
+      "id": "FCCJRyhxZSo",
+      "channelId": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "channelTitle": "NASA",
+      "title": "NASA's SpaceX Crew-13 Arrival & Welcome Remarks",
+      "publishedAt": "2026-10-02T02:02:18.000Z",
+      "updatedAt": "2026-10-02T04:53:06.000Z",
+      "url": "https://www.youtube.com/watch?v=FCCJRyhxZSo"
+    },
+    {
+      "id": "gIURQuAEec4",
+      "channelId": "UCryGec9PdUCLjpJW2mgCuLw",
+      "channelTitle": "NASA Jet Propulsion Laboratory",
+      "title": "JPL x SpaceX | NXT in Space: Episode 4",
+      "publishedAt": "2026-10-01T22:36:00.000Z",
+      "updatedAt": "2026-10-01T22:36:02.000Z",
+      "url": "https://www.youtube.com/watch?v=gIURQuAEec4"
+    },
+    {
+      "id": "QSJVOZOUmek",
+      "channelId": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "channelTitle": "NASA",
+      "title": "NASA's SpaceX Crew-13 Postlaunch News Conference (Oct. 1, 2026)",
+      "publishedAt": "2026-10-01T18:03:15.000Z",
+      "updatedAt": "2026-10-02T04:12:25.000Z",
+      "url": "https://www.youtube.com/watch?v=QSJVOZOUmek"
+    },
+    {
+      "id": "0w5hBQcFYaw",
+      "channelId": "UCryGec9PdUCLjpJW2mgCuLw",
+      "channelTitle": "NASA Jet Propulsion Laboratory",
+      "title": "What's Up: October 2026 Skywatching Tips from NASA",
+      "publishedAt": "2026-10-01T16:57:06.000Z",
+      "updatedAt": "2026-10-02T11:52:27.000Z",
+      "url": "https://www.youtube.com/watch?v=0w5hBQcFYaw"
+    },
+    {
+      "id": "7ZiUbT1-djA",
+      "channelId": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "channelTitle": "NASA",
+      "title": "NASA's SpaceX Crew-13 Launch",
+      "publishedAt": "2026-10-01T15:53:01.000Z",
+      "updatedAt": "2026-10-01T22:31:57.000Z",
+      "url": "https://www.youtube.com/watch?v=7ZiUbT1-djA"
+    },
+    {
+      "id": "EP6YZjsMa_k",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "Welcome to Le Bistrot Sophie, the most exclusive restaurant in orbit 🍽️",
+      "publishedAt": "2026-10-01T15:00:18.000Z",
+      "updatedAt": "2026-10-01T15:00:21.000Z",
+      "url": "https://www.youtube.com/watch?v=EP6YZjsMa_k"
+    },
+    {
+      "id": "FyTnJa23DNM",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "What happened this month at the European Space Agency? (September 2026)",
+      "publishedAt": "2026-10-01T12:35:59.000Z",
+      "updatedAt": "2026-10-01T20:54:39.000Z",
+      "url": "https://www.youtube.com/watch?v=FyTnJa23DNM"
+    },
+    {
+      "id": "-5bZt8FgYhc",
+      "channelId": "UCfMIdADo6FQayQCOkLYGhrQ",
+      "channelTitle": "JAXA | 宇宙航空研究開発機構",
+      "title": "MMXXH3F10 夜空のパブリックビューイング #shorts",
+      "publishedAt": "2026-10-01T08:00:39.000Z",
+      "updatedAt": "2026-10-02T12:01:49.000Z",
+      "url": "https://www.youtube.com/watch?v=-5bZt8FgYhc"
+    },
+    {
+      "id": "MiHrtFErU5c",
+      "channelId": "UCfMIdADo6FQayQCOkLYGhrQ",
+      "channelTitle": "JAXA | 宇宙航空研究開発機構",
+      "title": "【宇宙戦略基金事業】（追加公募）高頻度打上げに資するロケット部品・コンポーネント等の開発",
+      "publishedAt": "2026-10-01T01:59:37.000Z",
+      "updatedAt": "2026-10-01T01:59:37.000Z",
+      "url": "https://www.youtube.com/watch?v=MiHrtFErU5c"
+    },
+    {
+      "id": "mlfzT_nD6GE",
+      "channelId": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "channelTitle": "NASA",
+      "title": "NASA's SpaceX Crew-13 Prelaunch News Conference (Sept. 30, 2026)",
+      "publishedAt": "2026-09-30T22:59:34.000Z",
+      "updatedAt": "2026-10-01T23:24:44.000Z",
+      "url": "https://www.youtube.com/watch?v=mlfzT_nD6GE"
+    },
+    {
+      "id": "ErAqN6gXqZQ",
+      "channelId": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "channelTitle": "NASA",
+      "title": "NASA's SpaceX Crew-13 Mission (Official NASA Trailer)",
+      "publishedAt": "2026-09-30T18:48:20.000Z",
+      "updatedAt": "2026-09-30T18:50:42.000Z",
+      "url": "https://www.youtube.com/watch?v=ErAqN6gXqZQ"
+    },
+    {
+      "id": "4_Dw3DumXoQ",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "Let’s Smile (the full story)",
+      "publishedAt": "2026-09-30T11:31:19.000Z",
+      "updatedAt": "2026-09-30T19:08:16.000Z",
+      "url": "https://www.youtube.com/watch?v=4_Dw3DumXoQ"
+    },
+    {
+      "id": "XzW1190eTI0",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "One week left in space and mixed emotions are kicking in 🧑‍🚀🌍",
+      "publishedAt": "2026-09-29T15:00:04.000Z",
+      "updatedAt": "2026-09-30T19:42:15.000Z",
+      "url": "https://www.youtube.com/watch?v=XzW1190eTI0"
+    },
+    {
+      "id": "G0aJU3BLbWw",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "Finding Our Way: Inside the Galileo Project (ESA documentary)",
+      "publishedAt": "2026-09-29T09:13:35.000Z",
+      "updatedAt": "2026-10-01T12:33:30.000Z",
+      "url": "https://www.youtube.com/watch?v=G0aJU3BLbWw"
+    },
+    {
+      "id": "j9epFget1W8",
+      "channelId": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "channelTitle": "NASA",
+      "title": "Space Station Operations Update (Sept. 28, 2026)",
+      "publishedAt": "2026-09-28T20:03:03.000Z",
+      "updatedAt": "2026-09-30T11:02:23.000Z",
+      "url": "https://www.youtube.com/watch?v=j9epFget1W8"
+    },
+    {
+      "id": "yZAJ58dDxm4",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "Ever heard of dust devils on Mars? 🌪️",
+      "publishedAt": "2026-09-28T15:20:13.000Z",
+      "updatedAt": "2026-09-29T10:31:31.000Z",
+      "url": "https://www.youtube.com/watch?v=yZAJ58dDxm4"
+    },
+    {
+      "id": "4HTQn3dKkvM",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "From cleanroom to space: FLEX and Sentinel-3C",
+      "publishedAt": "2026-09-28T14:25:38.000Z",
+      "updatedAt": "2026-09-29T09:47:20.000Z",
+      "url": "https://www.youtube.com/watch?v=4HTQn3dKkvM"
+    },
+    {
+      "id": "x2Tef1Xef1A",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "Things that just make sense when you live at Concordia Station in Antarctica ❄️",
+      "publishedAt": "2026-09-27T09:50:01.000Z",
+      "updatedAt": "2026-09-29T23:13:47.000Z",
+      "url": "https://www.youtube.com/watch?v=x2Tef1Xef1A"
+    },
+    {
+      "id": "1p_vNsKFBg8",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "Two spacecraft in contact with each other? 🛰️",
+      "publishedAt": "2026-09-26T09:50:23.000Z",
+      "updatedAt": "2026-09-28T07:31:06.000Z",
+      "url": "https://www.youtube.com/watch?v=1p_vNsKFBg8"
+    },
+    {
+      "id": "gAjo7vrYi_4",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "What’s for lunch in space? 🥩🥦🍄 (Part 3)",
+      "publishedAt": "2026-09-24T15:15:06.000Z",
+      "updatedAt": "2026-09-27T09:25:20.000Z",
+      "url": "https://www.youtube.com/watch?v=gAjo7vrYi_4"
+    },
+    {
+      "id": "DOM6oSKaFqY",
+      "channelId": "UCfMIdADo6FQayQCOkLYGhrQ",
+      "channelTitle": "JAXA | 宇宙航空研究開発機構",
+      "title": "火星衛星探査計画（MMX）に関する記者説明会",
+      "publishedAt": "2026-09-24T05:14:36.000Z",
+      "updatedAt": "2026-09-27T03:38:59.000Z",
+      "url": "https://www.youtube.com/watch?v=DOM6oSKaFqY"
+    },
+    {
+      "id": "27hy4RGoAyc",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "Who is ready for a change of season? 🍂🌱",
+      "publishedAt": "2026-09-23T10:30:05.000Z",
+      "updatedAt": "2026-09-25T03:45:34.000Z",
+      "url": "https://www.youtube.com/watch?v=27hy4RGoAyc"
+    },
+    {
+      "id": "v03RjDNwG1o",
+      "channelId": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "channelTitle": "NASA",
+      "title": "Progress 96 Cargo Ship Docking",
+      "publishedAt": "2026-09-19T13:54:40.000Z",
+      "updatedAt": "2026-09-26T08:24:07.000Z",
+      "url": "https://www.youtube.com/watch?v=v03RjDNwG1o"
+    },
+    {
+      "id": "gHFNARBn76U",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "We've been getting the size of our own galaxy slightly wrong 📏",
+      "publishedAt": "2026-09-19T09:50:36.000Z",
+      "updatedAt": "2026-10-01T05:11:54.000Z",
+      "url": "https://www.youtube.com/watch?v=gHFNARBn76U"
+    },
+    {
+      "id": "AI4Vp3C08pc",
+      "channelId": "UCIBaDdAbGlFDeS33shmlD0A",
+      "channelTitle": "European Space Agency, ESA",
+      "title": "What’s for lunch in space? 🥩🥦🍄 (Part 2)",
+      "publishedAt": "2026-09-18T08:46:00.000Z",
+      "updatedAt": "2026-09-19T21:25:29.000Z",
+      "url": "https://www.youtube.com/watch?v=AI4Vp3C08pc"
+    },
+    {
+      "id": "LmE-kA963cY",
+      "channelId": "UCfMIdADo6FQayQCOkLYGhrQ",
+      "channelTitle": "JAXA | 宇宙航空研究開発機構",
+      "title": "JAXAの特別公開·一般公開 各地で開催！#shorts",
+      "publishedAt": "2026-09-17T08:00:32.000Z",
+      "updatedAt": "2026-09-18T00:09:58.000Z",
+      "url": "https://www.youtube.com/watch?v=LmE-kA963cY"
+    },
+    {
+      "id": "M9W4gF1qjNo",
+      "channelId": "UCryGec9PdUCLjpJW2mgCuLw",
+      "channelTitle": "NASA Jet Propulsion Laboratory",
+      "title": "“Every engineer has one or two reports that are close to their heart” | NXT in Space",
+      "publishedAt": "2026-09-16T22:23:04.000Z",
+      "updatedAt": "2026-09-18T11:29:59.000Z",
+      "url": "https://www.youtube.com/watch?v=M9W4gF1qjNo"
+    },
+    {
+      "id": "aujP8wuMTMI",
+      "channelId": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "channelTitle": "NASA",
+      "title": "NASA’s SpaceX Crew-12 Pre-Departure News Conference (Sept. 16, 2026)",
+      "publishedAt": "2026-09-16T19:17:40.000Z",
+      "updatedAt": "2026-09-26T06:11:07.000Z",
+      "url": "https://www.youtube.com/watch?v=aujP8wuMTMI"
+    }
+  ]
+}
